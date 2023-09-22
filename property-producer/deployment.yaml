@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: property-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: property-producer
+  template:
+    metadata:
+      labels:
+        app: property-producer
+    spec:
+      containers:
+        - name: property-producer
+          image: rolfeiacr.azurecr.io/house-producer:0.0.8
+          ports:
+            - containerPort: 10001
+          env:
+            - name: JAVA_OPTS
+              value: >-
+                -Xmx200m
+                -Xss256k
+                -XX:MaxRAM=250M
+            - name: APP_CONFIGURATION_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: appconfig-secret
+                  key: connection-string
+      imagePullSecrets:
+        - name: my-acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: property-producer
+spec:
+  type: ClusterIP
+  ports:
+    - port: 10001
+      targetPort: 10001
+  selector:
+    app: property-producer

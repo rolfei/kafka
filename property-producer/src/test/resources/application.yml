@@ -1,0 +1,22 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+      group-id: rolfei
+      properties:
+      # default url for schema registry is localhost:8081 if it is not supplied
+        "[schema.registry.url]": not-used
+    producer:
+      auto-offset-reset: earliest
+      group-id: rolfei
+      schema.registry.url: not-used
+      properties:
+        # default url for schema registry is localhost:8081 if it is not supplied
+        "schema.registry.url": not-used
+
+
+
+
+kafka-producer:
+  createHouseTopic: create-house-avro
